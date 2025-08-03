@@ -17,9 +17,9 @@ BUILD_DIR="$HOME/audio_software_build"
 REAPER_URL="https://www.reaper.fm/files/7.x/reaper742_linux_x86_64.tar.xz"
 
 # The dependencies required to build Guitarix and download Reaper.
-# This list is based on your provided list and ensures C++ compilers are available.
+# This list is based on your provided list and ensures C++ compilers and other tools are available.
 # Note: 'icpc' is a proprietary compiler and cannot be installed via apt.
-DEPENDENCIES="build-essential clang gperf intltool libavahi-gobject-dev libbluetooth-dev libboost-dev libboost-iostreams-dev libboost-system-dev libboost-thread-dev libeigen3-dev libgtk-3-dev libgtkmm-3.0-dev libjack-dev liblilv-dev liblrdf0-dev libsndfile1-dev libfftw3-dev lv2-dev python3 python-is-python3 sassc wget"
+DEPENDENCIES="build-essential clang gperf intltool libavahi-gobject-dev libbluetooth-dev libboost-dev libboost-iostreams-dev libboost-system-dev libboost-thread-dev libeigen3-dev libgtk-3-dev libgtkmm-3.0-dev libjack-dev liblilv-dev liblrdf0-dev libsndfile1-dev libfftw3-dev lv2-dev python3 python-is-python3 sassc wget fonts-roboto faust"
 
 # --- STEP 1: INSTALL BUILD DEPENDENCIES ---
 echo "--> Step 1: Installing build dependencies. This may take a few minutes."
@@ -73,6 +73,9 @@ echo ""
 # --- STEP 6: CONFIGURE THE GUITARIX BUILD ---
 echo "--> Step 6: Configuring the Guitarix build with 'waf'."
 cd trunk
+# The '--optimization' flag enables compiler optimizations, including support for
+# modern CPU instruction sets like x86-64-v3, to improve performance.
+echo "--> Configuring the build for optimization and modern CPU instruction sets."
 ./waf configure --prefix=/usr --includeresampler --includeconvolver --optimization
 echo "--> Configuration complete."
 echo ""
