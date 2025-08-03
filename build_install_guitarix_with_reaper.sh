@@ -19,7 +19,7 @@ REAPER_URL="https://www.reaper.fm/files/7.x/reaper742_linux_x86_64.tar.xz"
 # The dependencies required to build Guitarix and download Reaper.
 # This list is based on your provided list and ensures C++ compilers and other tools are available.
 # Note: 'icpc' is a proprietary compiler and cannot be installed via apt.
-DEPENDENCIES="build-essential clang gperf intltool libavahi-gobject-dev libbluetooth-dev libboost-dev libboost-iostreams-dev libboost-system-dev libboost-thread-dev libeigen3-dev libgtk-3-dev libgtkmm-3.0-dev libjack-dev liblilv-dev liblrdf0-dev libsndfile1-dev libfftw3-dev lv2-dev python3 python-is-python3 sassc wget fonts-roboto faust"
+DEPENDENCIES="build-essential clang gperf intltool libavahi-gobject-dev libbluetooth-dev libboost-dev libboost-iostreams-dev libboost-system-dev libboost-thread-dev libeigen3-dev libgtk-3-dev libgtkmm-3.0-dev libjack-dev liblilv-dev liblrdf0-dev libsndfile1-dev libfftw3-dev lv2-dev python3 python-is-python3 sassc wget fonts-roboto faust jackd2"
 
 # --- STEP 1: INSTALL BUILD DEPENDENCIES ---
 echo "--> Step 1: Installing build dependencies. This may take a few minutes."
