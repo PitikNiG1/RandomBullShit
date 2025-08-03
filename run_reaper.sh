@@ -22,6 +22,17 @@ check_jack_installed() {
 }
 
 # --- Main Script Logic ---
+
+# Check for crucial audio permissions.
+# The user must be a member of the 'audio' group for low-latency performance.
+if ! groups | grep -q "audio"; then
+    echo "WARNING: You are not in the 'audio' group."
+    echo "This can cause high latency and audio dropouts."
+    echo "To fix this, run 'sudo usermod -aG audio <your_username>' and then reboot."
+    # We will not exit here, but it's important for the user to be aware.
+    echo ""
+fi
+
 # First, check if JACK daemon is installed.
 if check_jack_installed; then
     echo "JACK daemon found. Proceeding with checks..."
@@ -40,11 +51,17 @@ if ! pidof jackd &> /dev/null; then
     # -d alsa: Use the ALSA audio driver.
     # -d hw:CARD_NUM: Specifies the audio device. '0' is usually the built-in sound card,
     #                  while external USB interfaces might be 1, 2, etc.
+    # To find your device number, run `aplay -l` in a terminal.
     # -r 48000: Sets the sample rate to 48kHz.
     # -p 256: Sets the buffer size to 256 frames.
     # -n 2: Sets the number of periods/buffers to 2.
     # We use 'nohup' and '&' to run it in the background and detach from the terminal.
     nohup jackd -d alsa -d hw:0 -r 48000 -p 256 -n 2 &> jack-startup.log &
+
+    # Add a short delay to give the JACK server time to initialize.
+    # This can prevent "client connection" errors.
+    sleep 2
+
     echo "JACK server started. Check jack-startup.log for output."
 else
     echo "JACK server is already running."
