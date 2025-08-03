@@ -92,6 +92,17 @@ echo "Installing the REAPER and JACK startup service..."
 
 # First, check if the script is being run to install the service.
 if [[ "$1" != "run" ]]; then
+    # Check if an old service already exists. If so, remove it.
+    if sudo systemctl is-enabled "$SERVICE_NAME" &> /dev/null; then
+        echo "Found an existing service. Disabling and removing it..."
+        sudo systemctl stop "$SERVICE_NAME" || true
+        sudo systemctl disable "$SERVICE_NAME" || true
+        sudo rm -f "$SERVICE_FILE_PATH" || true
+        sudo rm -f "$SCRIPT_PATH" || true
+        sudo systemctl daemon-reload
+        echo "Existing service and script removed."
+    fi
+
     # Create the script file with the necessary content.
     echo "#!/bin/bash" > "$SCRIPT_NAME"
     echo "# This script is the backend for the systemd service." >> "$SCRIPT_NAME"
