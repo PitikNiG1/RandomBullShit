@@ -15,8 +15,9 @@ USER_NAME=$(whoami) # Automatically detect the current user
 BUILD_DIR="$HOME/audio_software_build"
 REAPER_URL="https://www.reaper.fm/files/7.x/reaper742_linux_x86_64.tar.xz"
 
-# Dependencies for building Guitarix and general audio tools
-DEPENDENCIES="git build-essential clang gperf intltool libavahi-gobject-dev libbluetooth-dev libboost-dev libboost-iostreams-dev libboost-system-dev libboost-thread-dev libeigen3-dev libgtk-3-dev libgtkmm-3.0-dev libjack-dev liblilv-dev liblrdf0-dev libsndfile1-dev libfftw3-dev lv2-dev python3 python-is-python3 sassc wget fonts-roboto faust jackd2 alsa-utils nano dkms linux-headers-$(uname -r)"
+# Dependencies for building Guitarix and general audio tools, split to handle jackd2 issue
+JACK_DEPENDENCIES="jackd2 libjack-jackd2-0"
+CORE_DEPENDENCIES="git build-essential clang gperf intltool libavahi-gobject-dev libbluetooth-dev libboost-dev libboost-iostreams-dev libboost-system-dev libboost-thread-dev libeigen3-dev libgtk-3-dev libgtkmm-3.0-dev libjack-dev liblilv-dev liblrdf0-dev libsndfile1-dev libfftw3-dev lv2-dev python3 python-is-python3 sassc wget fonts-roboto faust alsa-utils nano dkms linux-headers-$(uname -r)"
 
 # Packages to purge for debloating antiX's default desktop environment
 DEBLOAT_PACKAGES="desktop-defaults* rox-filer spacefm* icewm* slim* yad* lightdm* openbox*" # Expanded list for antiX/Debian variants
@@ -38,9 +39,19 @@ echo ""
 
 # ====== 1. Install Core Dependencies for Audio & Building ======
 echo "--> Step 1: Installing essential audio and build dependencies."
-echo "    The following packages will be installed: $DEPENDENCIES"
-sudo apt install -y $DEPENDENCIES
-echo "--> Dependencies installed successfully."
+
+# First, install the JACK dependencies separately to resolve the dependency issue
+echo "--> Step 1.1: Installing JACK daemon and libraries..."
+echo "    The following packages will be installed: $JACK_DEPENDENCIES"
+sudo apt install -y $JACK_DEPENDENCIES
+echo "--> JACK components installed successfully."
+echo ""
+
+# Now install the rest of the dependencies
+echo "--> Step 1.2: Installing remaining essential dependencies."
+echo "    The following packages will be installed: $CORE_DEPENDENCIES"
+sudo apt install -y $CORE_DEPENDENCIES
+echo "--> Remaining dependencies installed successfully."
 echo ""
 
 # ====== 2. Install Real-time Kernel (if available and not already installed) ======
